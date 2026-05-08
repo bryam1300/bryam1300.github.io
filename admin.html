@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — ECA Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <!-- TELA DE LOGIN -->
+  <div id="telaLogin" class="login-wrap">
+    <div class="login-box">
+      <div class="login-logo">
+        <span class="logo-icon">ECA</span>
+        <span class="login-titulo">Área do Administrador</span>
+      </div>
+      <p class="login-sub">Acesso restrito — apenas o professor/administrador</p>
+
+      <div class="campo">
+        <label>Usuário</label>
+        <input type="text" id="loginUser" placeholder="admin" autocomplete="username" />
+      </div>
+      <div class="campo">
+        <label>Senha</label>
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') fazerLogin()" />
+      </div>
+      <div class="erro" id="loginErro" style="display:none">Usuário ou senha incorretos.</div>
+      <button class="btn-submit" onclick="fazerLogin()">Entrar no painel →</button>
+      <a href="index.html" class="login-voltar">← Voltar ao site</a>
+    </div>
+  </div>
+
+  <!-- PAINEL ADMIN -->
+  <div id="painelAdmin" style="display:none">
+
+    <div class="admin-header">
+      <div class="header-inner">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">ECA</div>
+          <div>
+            <span class="logo-title">ECA Digital</span>
+            <span class="logo-sub">Painel Admin</span>
+          </div>
+        </a>
+        <div style="display:flex;align-items:center;gap:16px">
+          <span class="admin-badge">👤 Admin</span>
+          <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-container">
+
+      <!-- CARDS DE RESUMO -->
+      <div class="resumo-grid">
+        <div class="resumo-card">
+          <span class="resumo-num" id="r-pendentes">0</span>
+          <span class="resumo-label">Pendentes</span>
+          <span class="resumo-dot dot-amarelo"></span>
+        </div>
+        <div class="resumo-card">
+          <span class="resumo-num" id="r-aprovados">0</span>
+          <span class="resumo-label">Aprovados</span>
+          <span class="resumo-dot dot-verde"></span>
+        </div>
+        <div class="resumo-card">
+          <span class="resumo-num" id="r-total">0</span>
+          <span class="resumo-label">Total enviados</span>
+          <span class="resumo-dot dot-cinza"></span>
+        </div>
+        <div class="resumo-card">
+          <span class="resumo-num" id="r-autores">0</span>
+          <span class="resumo-label">Alunos</span>
+          <span class="resumo-dot dot-roxo"></span>
+        </div>
+      </div>
+
+      <!-- ABAS -->
+      <div class="abas">
+        <button class="aba active" data-aba="pendentes" onclick="mudarAba('pendentes')">
+          ⏳ Pendentes <span class="badge" id="badge-pendentes">0</span>
+        </button>
+        <button class="aba" data-aba="aprovados" onclick="mudarAba('aprovados')">
+          ✅ Aprovados <span class="badge" id="badge-aprovados">0</span>
+        </button>
+        <button class="aba" data-aba="todos" onclick="mudarAba('todos')">
+          📋 Todos
+        </button>
+      </div>
+
+      <!-- BUSCA ADMIN -->
+      <div class="busca-wrap" style="margin-bottom:20px">
+        <input class="busca" type="text" id="adminBusca" placeholder="🔍  Buscar projetos…" oninput="renderAdmin()" />
+      </div>
+
+      <!-- TABELA -->
+      <div class="tabela-wrap">
+        <table class="tabela" id="tabelaAdmin">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Autor</th>
+              <th>Categoria</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaBody"></tbody>
+        </table>
+        <div class="empty" id="adminEmpty" style="display:none">
+          <span>📭</span><p>Nenhum projeto aqui.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR -->
+  <div class="overlay" id="overlayEdit" onclick="fecharEditFora(event)">
+    <div class="modal" id="modalEdit">
+      <div class="modal-head">
+        <h3>Editar Trabalho</h3>
+        <button class="close-btn" onclick="fecharEdit()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="e-id" />
+        <div class="campo"><label>Título *</label><input id="e-titulo" maxlength="80" /></div>
+        <div class="campo"><label>Autor *</label><input id="e-autor" maxlength="50" /></div>
+        <div class="campo">
+          <label>Categoria *</label>
+          <select id="e-cat">
+            <option value="pesquisa">Pesquisa</option>
+            <option value="video">Vídeo</option>
+            <option value="infografico">Infográfico</option>
+            <option value="redacao">Redação</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="campo"><label>Descrição *</label><textarea id="e-desc" rows="4" maxlength="500"></textarea></div>
+        <div class="campo"><label>Link (opcional)</label><input id="e-link" type="url" /></div>
+        <div class="campo"><label>Tags (separadas por vírgula)</label><input id="e-tags" maxlength="100" /></div>
+        <div class="campo">
+          <label>Status</label>
+          <select id="e-status">
+            <option value="pendente">Pendente</option>
+            <option value="aprovado">Aprovado</option>
+          </select>
+        </div>
+        <div class="erro" id="e-erro" style="display:none"></div>
+        <button class="btn-submit" onclick="salvarEdicao()">💾 Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMAR EXCLUSÃO -->
+  <div class="overlay" id="overlayDel" onclick="fecharDelFora(event)">
+    <div class="modal modal-sm" id="modalDel">
+      <div class="modal-head">
+        <h3>Excluir projeto?</h3>
+        <button class="close-btn" onclick="fecharDel()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--texto-suave);margin-bottom:20px">Essa ação não pode ser desfeita. O trabalho será removido permanentemente.</p>
+        <div style="display:flex;gap:10px">
+          <button class="btn-cancel" onclick="fecharDel()" style="flex:1">Cancelar</button>
+          <button class="btn-danger" onclick="confirmarExclusao()" style="flex:1">🗑 Excluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

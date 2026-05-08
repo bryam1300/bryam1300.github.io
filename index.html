@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECA Digital — 3º Ano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">ECA</div>
+        <div>
+          <span class="logo-title">ECA Digital</span>
+          <span class="logo-sub">3º Ano · 2025</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="#projetos" class="nav-link">Projetos</a>
+        <a href="#sobre" class="nav-link">Sobre o ECA</a>
+        <a href="admin.html" class="nav-link nav-admin">⚙ Admin</a>
+        <button class="btn-primary" onclick="abrirModal()">+ Publicar</button>
+      </nav>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+    <div class="nav-mobile" id="navMobile">
+      <a href="#projetos" onclick="toggleMenu()">Projetos</a>
+      <a href="#sobre" onclick="toggleMenu()">Sobre o ECA</a>
+      <a href="admin.html">⚙ Admin</a>
+      <button class="btn-primary" onclick="toggleMenu();abrirModal()">+ Publicar</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg-text" aria-hidden="true">ECA</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">✦ Estatuto da Criança e do Adolescente</div>
+      <h1 class="hero-title">Nossos Direitos<br><em>no Mundo Digital</em></h1>
+      <p class="hero-desc">Espaço colaborativo do 3º Ano para compartilhar pesquisas, projetos e reflexões sobre o ECA no ambiente digital.</p>
+      <button class="btn-hero" onclick="abrirModal()">Publicar meu trabalho →</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num" id="numProjetos">0</span>
+        <span class="stat-label">Projetos publicados</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat">
+        <span class="stat-num" id="numAutores">0</span>
+        <span class="stat-label">Alunos participantes</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projetos">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Trabalhos Publicados</h2>
+        <div class="filtros">
+          <button class="filtro active" data-cat="todos">Todos</button>
+          <button class="filtro" data-cat="pesquisa">Pesquisa</button>
+          <button class="filtro" data-cat="video">Vídeo</button>
+          <button class="filtro" data-cat="infografico">Infográfico</button>
+          <button class="filtro" data-cat="redacao">Redação</button>
+          <button class="filtro" data-cat="outro">Outro</button>
+        </div>
+      </div>
+      <div class="busca-wrap">
+        <input class="busca" type="text" id="busca" placeholder="🔍  Buscar por título, autor ou tag…" oninput="renderizar()" />
+      </div>
+      <div class="cards-grid" id="cardsGrid"></div>
+      <div class="empty" id="empty" style="display:none">
+        <span>😕</span><p>Nenhum projeto aprovado ainda.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sobre" id="sobre">
+    <div class="container sobre-grid">
+      <div>
+        <span class="eyebrow">📖 Saiba mais</span>
+        <h2 class="section-title">O que é o ECA?</h2>
+        <p>O <strong>Estatuto da Criança e do Adolescente</strong> (Lei 8.069/1990) é a principal lei de proteção dos direitos de crianças e adolescentes no Brasil.</p>
+        <p>No ambiente digital, o ECA protege contra cyberbullying, uso indevido de dados, conteúdos impróprios e exploração online.</p>
+        <div class="direitos">
+          <div class="direito">🛡️ Proteção online</div>
+          <div class="direito">🔒 Privacidade</div>
+          <div class="direito">📚 Educação digital</div>
+          <div class="direito">💬 Liberdade de expressão</div>
+        </div>
+      </div>
+      <div class="artigos">
+        <div class="artigo">
+          <span class="artigo-num">Art. 17</span>
+          <p>"O direito ao respeito consiste na inviolabilidade da integridade física, psíquica e moral da criança e do adolescente…"</p>
+        </div>
+        <div class="artigo">
+          <span class="artigo-num">Art. 5º</span>
+          <p>"Nenhuma criança ou adolescente será objeto de qualquer forma de negligência, discriminação, exploração, violência, crueldade e opressão…"</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="logo-icon" style="font-size:.72rem;padding:3px 8px">ECA</span>
+        <span>ECA Digital — 3º Ano 2025</span>
+      </div>
+      <a href="admin.html" class="footer-admin-link">Área Admin →</a>
+    </div>
+  </footer>
+
+  <!-- MODAL PUBLICAR -->
+  <div class="overlay" id="overlay" onclick="fecharFora(event)">
+    <div class="modal" id="modal">
+      <div class="modal-head">
+        <h3>Publicar Trabalho</h3>
+        <button class="close-btn" onclick="fecharModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo"><label>Título *</label><input id="f-titulo" maxlength="80" placeholder="Ex: Cyberbullying e o ECA" /></div>
+        <div class="campo"><label>Seu Nome *</label><input id="f-autor" maxlength="50" placeholder="Ex: Maria Souza" /></div>
+        <div class="campo">
+          <label>Categoria *</label>
+          <select id="f-cat">
+            <option value="">Selecione…</option>
+            <option value="pesquisa">Pesquisa</option>
+            <option value="video">Vídeo</option>
+            <option value="infografico">Infográfico</option>
+            <option value="redacao">Redação</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="campo"><label>Descrição / Resumo *</label><textarea id="f-desc" rows="4" maxlength="500" placeholder="Descreva seu trabalho em algumas frases…"></textarea></div>
+        <div class="campo"><label>Link do trabalho (opcional)</label><input id="f-link" type="url" placeholder="https://docs.google.com/…" /></div>
+        <div class="campo"><label>Tags (separadas por vírgula)</label><input id="f-tags" maxlength="100" placeholder="Ex: bullying, privacidade, redes sociais" /></div>
+        <div class="erro" id="f-erro" style="display:none"></div>
+        <button class="btn-submit" onclick="publicar()">✦ Enviar para aprovação</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
